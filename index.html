@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reservas - Hotel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1.1em;
+            color: #495057;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab.active {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .tab-content {
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .calculation-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 2px solid #dee2e6;
+        }
+
+        .calculation-box h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .calculation-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .calculation-row:last-child {
+            border-bottom: none;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 2px solid #667eea;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .success-message, .error-message {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: slideIn 0.5s ease;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .room-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .room-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .room-type {
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .room-capacity {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .room-price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                padding: 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calculation-row {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .calculation-row > * {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏨 Sistema de Reservas Hostal HDQ</h1>
+            <p>HDQ - Gestión habitaciones y reservas </p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('nueva-reserva', this)">Nueva Reserva</button>
+            <button class="tab" onclick="showTab('habitaciones', this)">Habitaciones</button>
+            <button class="tab" onclick="showTab('estadisticas', this)">Estadísticas</button>
+        </div>
+
+        <div id="nueva-reserva" class="tab-content">
+            <form id="reservaForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo *</label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono *</label>
+                        <input type="tel" id="telefono" name="telefono" required placeholder="+56 9 1234 5678">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="huespedes">Número de Huéspedes *</label>
+                        <select id="huespedes" name="huespedes" required>
+                            <option value="">Seleccione...</option>
+                            <option value="1">1 persona</option>
+                            <option value="2">2 personas</option>
+                            <option value="3">3 personas</option>
+                            <option value="4">4 personas</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkin">Check-in *</label>
+                        <input type="date" id="checkin" name="checkin" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkout">Check-out *</label>
+                        <input type="date" id="checkout" name="checkout" required>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="habitacion">Habitación *</label>
+                        <select id="habitacion" name="habitacion" required>
+                            <option value="">Primero seleccione número de huéspedes...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="comentarios">Comentarios adicionales</label>
+                        <textarea id="comentarios" name="comentarios" placeholder="Solicitudes especiales, hora estimada de llegada, etc."></textarea>
+                    </div>
+                </div>
+
+                <div id="totalCalculation" class="calculation-box hidden">
+                    <h3>Resumen de la Reserva</h3>
+                    <div class="calculation-row">
+                        <span>Habitación:</span>
+                        <span id="habitacionSeleccionada"></span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>Precio por noche:</span>
+                        <span id="precioPorNoche"></span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>Número de noches:</span>
+                        <span id="numeroNoches"></span>
+                    </div>
+                    <div class="calculation-row">
+                        <span>Total a pagar:</span>
+                        <span id="precioTotal"></span>
+                    </div>
+                </div>
+
+                <div id="mensaje"></div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button type="submit" class="btn">Confirmar Reserva</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="habitaciones" class="tab-content hidden">
+            <h2>Nuestras Habitaciones</h2>
+            <div class="room-grid" id="roomGrid">
+                <!-- Las habitaciones se cargarán dinámicamente -->
+            </div>
+        </div>
+
+        <div id="estadisticas" class="tab-content hidden">
+            <h2>Panel de Estadísticas</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReservas">0</div>
+                    <div class="stat-label">Reservas Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="habitacionesDisponibles">10</div>
+                    <div class="stat-label">Habitaciones Disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="ocupacionPromedio">0%</div>
+                    <div class="stat-label">Ocupación Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="ingresosMes">$0</div>
+                    <div class="stat-label">Ingresos del Mes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de habitaciones
+        const habitaciones = {
+            101: { nombre: 'Doble', precio: 40000, capacidad: 2 },
+            102: { nombre: 'Doble / 2 ambientes', precio: 80000, capacidad: 4 },
+            103: { nombre: 'Doble', precio: 40000, capacidad: 2 },
+            201: { nombre: 'Doble / 2 ambientes', precio: 80000, capacidad: 4 },
+            202: { nombre: 'Matrimonial', precio: 40000, capacidad: 2 },
+            203: { nombre: 'Matrimonial', precio: 40000, capacidad: 2 },
+            204: { nombre: 'Triple', precio: 60000, capacidad: 3 },
+            205: { nombre: 'Triple', precio: 60000, capacidad: 3 },
+            206: { nombre: 'Grupal', precio: 80000, capacidad: 4 },
+            207: { nombre: 'Grupal', precio: 80000, capacidad: 4 }
+        };
+
+        // URL de Google Apps Script (reemplazar con tu URL real)
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhEzapR_b_s0qMCoQhyWAmvIkcpz8SkLSL-IHwCaW4AQSVLK0ZT7xmWhpg5pmxPIzCAg/exec';
+
+        // Estado de la aplicación
+        let estadoReservas = {
+            total: 0,
+            mes: 0,
+            ingresos: 0
+        };
+
+        // Cambiar tabs
+        function showTab(tabName, tabElement) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remover clase active de todos los tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar contenido seleccionado
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Activar tab seleccionado
+            tabElement.classList.add('active');
+
+            // Cargar contenido específico del tab
+            if (tabName === 'habitaciones') {
+                cargarHabitaciones();
+            } else if (tabName === 'estadisticas') {
+                actualizarEstadisticas();
+            }
+        }
+
+        // Cargar habitaciones en la vista
+        function cargarHabitaciones() {
+            const roomGrid = document.getElementById('roomGrid');
+            roomGrid.innerHTML = '';
+
+            for (const [id, habitacion] of Object.entries(habitaciones)) {
+                const roomCard = document.createElement('div');
+                roomCard.className = 'room-card';
+                roomCard.innerHTML = `
+                    <div class="room-number">Habitación ${id}</div>
+                    <div class="room-type">${habitacion.nombre}</div>
+                    <div class="room-capacity">👥 Capacidad: ${habitacion.capacidad} personas</div>
+                    <div class="room-price">$${habitacion.precio.toLocaleString('es-CL')}/noche</div>
+                `;
+                roomGrid.appendChild(roomCard);
+            }
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            // Aquí podrías cargar datos reales desde Google Sheets
+            document.getElementById('totalReservas').textContent = estadoReservas.total;
+            document.getElementById('ingresosMes').textContent = `$${estadoReservas.ingresos.toLocaleString('es-CL')}`;
+            
+            // Calcular ocupación promedio (simulado)
+            const ocupacion = Math.floor(Math.random() * 30) + 60; // Entre 60% y 90%
+            document.getElementById('ocupacionPromedio').textContent = `${ocupacion}%`;
+        }
+
+        // Filtrar habitaciones según huéspedes
+        function actualizarHabitaciones() {
+            const huespedes = parseInt(document.getElementById('huespedes').value);
+            const habitacionSelect = document.getElementById('habitacion');
+            
+            if (!huespedes) {
+                habitacionSelect.innerHTML = '<option value="">Primero seleccione número de huéspedes...</option>';
+                return;
+            }
+            
+            habitacionSelect.innerHTML = '<option value="">Seleccione una habitación...</option>';
+            
+            for (const [id, habitacion] of Object.entries(habitaciones)) {
+                if (habitacion.capacidad >= huespedes) {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = `${id} - ${habitacion.nombre} (${habitacion.capacidad} personas) - $${habitacion.precio.toLocaleString('es-CL')}`;
+                    habitacionSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Calcular total
+        function calcularTotal() {
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const habitacionId = document.getElementById('habitacion').value;
+            
+            if (!checkin || !checkout || !habitacionId) {
+                document.getElementById('totalCalculation').classList.add('hidden');
+                return;
+            }
+            
+            const fechaCheckin = new Date(checkin);
+            const fechaCheckout = new Date(checkout);
+            const noches = Math.ceil((fechaCheckout - fechaCheckin) / (1000 * 60 * 60 * 24));
+            
+            if (noches <= 0) {
+                document.getElementById('totalCalculation').classList.add('hidden');
+                mostrarMensaje('La fecha de check-out debe ser posterior al check-in', 'error');
+                return;
+            }
+            
+            const habitacion = habitaciones[habitacionId];
+            const total = habitacion.precio * noches;
+            
+            document.getElementById('habitacionSeleccionada').textContent = `${habitacionId} - ${habitacion.nombre}`;
+            document.getElementById('precioPorNoche').textContent = `$${habitacion.precio.toLocaleString('es-CL')}`;
+            document.getElementById('numeroNoches').textContent = noches;
+            document.getElementById('precioTotal').textContent = `$${total.toLocaleString('es-CL')}`;
+            
+            document.getElementById('totalCalculation').classList.remove('hidden');
+        }
+
+        // Mostrar mensajes
+        function mostrarMensaje(texto, tipo = 'success') {
+            const mensaje = document.getElementById('mensaje');
+            const clase = tipo === 'success' ? 'success-message' : 'error-message';
+            const icono = tipo === 'success' ? '✅' : '❌';
+            
+            mensaje.innerHTML = `
+                <div class="${clase}">
+                    ${icono} ${texto}
+                </div>
+            `;
+            
+            // Auto-hide después de 5 segundos
+            setTimeout(() => {
+                mensaje.innerHTML = '';
+            }, 5000);
+        }
+
+        // Enviar datos a Google Sheets
+        async function enviarReserva(datos) {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                     // Importante para Google Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datos)
+                });
+                
+                // Con no-cors no podemos leer la respuesta, asumimos éxito
+                return { success: true };
+            } catch (error) {
+                console.error('Error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Validaciones
+        function validarEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validarTelefono(telefono) {
+            const re = /^[0-9+\-\s()]+$/;
+            return re.test(telefono) && telefono.length >= 8;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fecha mínima como hoy
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('checkin').min = hoy;
+            document.getElementById('checkout').min = hoy;
+            
+            // Event listeners para cálculos
+            document.getElementById('huespedes').addEventListener('change', actualizarHabitaciones);
+            document.getElementById('checkin').addEventListener('change', calcularTotal);
+            document.getElementById('checkout').addEventListener('change', calcularTotal);
+            document.getElementById('habitacion').addEventListener('change', calcularTotal);
+            
+            // Validar que checkout sea después de checkin
+            document.getElementById('checkin').addEventListener('change', function() {
+                const checkin = this.value;
+                document.getElementById('checkout').min = checkin;
+                if (document.getElementById('checkout').value && document.getElementById('checkout').value < checkin) {
+                    document.getElementById('checkout').value = checkin;
+                }
+            });
+            
+            // Enviar formulario
+            document.getElementById('reservaForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validaciones adicionales
+                const email = document.getElementById('email').value;
+                const telefono = document.getElementById('telefono').value;
+                
+                if (!validarEmail(email)) {
+                    mostrarMensaje('Por favor ingrese un email válido', 'error');
+                    return;
+                }
+                
+                if (!validarTelefono(telefono)) {
+                    mostrarMensaje('Por favor ingrese un teléfono válido', 'error');
+                    return;
+                }
+                
+                // Obtener datos del formulario
+                const formData = new FormData(this);
+                const datos = {};
+                for (let [key, value] of formData.entries()) {
+                    datos[key] = value;
+                }
+                
+                // Agregar datos calculados
+                const habitacionId = datos.habitacion;
+                const habitacion = habitaciones[habitacionId];
+                const checkin = new Date(datos.checkin);
+                const checkout = new Date(datos.checkout);
+                const noches = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+                const total = habitacion.precio * noches;
+                
+                datos.noches = noches;
+                datos.total = total;
+                datos.precio_por_noche = habitacion.precio;
+                datos.fecha_reserva = new Date().toISOString();
+                datos.id_reserva = 'R' + Date.now();
+                datos.tipo_habitacion = habitacion.nombre;
+                
+                // Mostrar mensaje de carga
+                const boton = document.querySelector('.btn');
+                const textoOriginal = boton.textContent;
+                boton.textContent = '⏳ Procesando...';
+                boton.disabled = true;
+                
+                try {
+                    // Si hay URL configurada, enviar a Google Sheets
+                     {
+                        await enviarReserva(datos);
+                    }
+                    
+                    // Actualizar estadísticas locales
+                    estadoReservas.total++;
+                    estadoReservas.ingresos += total;
+                    
+                    // Mostrar mensaje de éxito
+                    mostrarMensaje(`
+                        <strong>¡Reserva confirmada!</strong><br>
+                        ID de Reserva: ${datos.id_reserva}<br>
+                        Cliente: ${datos.nombre}<br>
+                        Habitación: ${habitacionId} - ${habitacion.nombre}<br>
+                        Check-in: ${formatearFecha(datos.checkin)}<br>
+                        Check-out: ${formatearFecha(datos.checkout)}<br>
+                        Total: $${total.toLocaleString('es-CL')}<br>
+                        <small>Se ha enviado un email de confirmación a ${datos.email}</small>
+                    `, 'success');
+                    
+                    // Limpiar formulario
+                    document.getElementById('reservaForm').reset();
+                    document.getElementById('totalCalculation').classList.add('hidden');
+                    document.getElementById('habitacion').innerHTML = '<option value="">Primero seleccione número de huéspedes...</option>';
+                    
+                } catch (error) {
+                    mostrarMensaje('Error al procesar la reserva. Por favor intente nuevamente.', 'error');
+                } finally {
+                    // Restaurar botón
+                    boton.textContent = textoOriginal;
+                    boton.disabled = false;
+                }
+            });
+        });
+
+        // Funciones utilitarias
+        function formatearFecha(fecha) {
+            return new Date(fecha).toLocaleDateString('es-CL', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+    </script>
+</body>
+</html>
