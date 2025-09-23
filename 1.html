@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Para archivo .png -->
+<link rel="icon" type="image/png" href="favicon.png">
+
+  <title>Hostal HDQ - Alojamiento en Sector Collao, Concepción | A 850m del Terminal Collao</title>
+    <meta name="description" content="Hostal HDQ en Concepción, sector Collao. Habitaciones con baño privado, WiFi gratis, estacionamiento. A 850m del Terminal Collao. ¡Reserva ya!">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏨</text></svg>">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": ["LodgingBusiness", "LocalBusiness"],
+        "name": "Hostal HDQ",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Chiloé 1130, Sector Collao",
+            "addressLocality": "Concepción",
+            "addressCountry": "CL"
+        },
+        "telephone": "+56987752280",
+        "email": "hostalhdq@gmail.com",
+        "priceRange": "$40.000 - $80.000 CLP"
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-light: #3B82F6;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-900: #0F172A;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-700);
+            background: var(--gray-50);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* Header */
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200); transition: all 0.3s;
+        }
+
+        .header.scrolled { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+        .header-container {
+            display: flex; align-items: center; justify-content: space-between; height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem; font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .nav { display: none; align-items: center; gap: 2rem; }
+        
+        .nav-link {
+            color: var(--gray-600); text-decoration: none; font-weight: 500;
+            transition: color 0.3s; position: relative;
+        }
+
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 2px;
+            background: var(--gradient); transition: width 0.3s;
+        }
+
+        .nav-link:hover { color: var(--primary); }
+        .nav-link:hover::after { width: 100%; }
+
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+
+        .phone-cta {
+            display: none; align-items: center; gap: 0.5rem; color: var(--primary);
+            text-decoration: none; font-weight: 600; font-size: 0.875rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.75rem 1.5rem; border: none; border-radius: 0.75rem;
+            font-weight: 600; font-size: 0.875rem; text-decoration: none;
+            cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+        }
+
+        .btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before { left: 100%; }
+
+        .btn-primary {
+            background: var(--gradient); color: var(--white);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); }
+
+        .btn-secondary {
+            background: var(--white); color: var(--primary); border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover { background: var(--primary); color: var(--white); }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1); color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(20px);
+        }
+
+        .btn-lg { padding: 1rem 2rem; font-size: 1rem; }
+
+        /* Hero */
+        .hero {
+            position: relative; min-height: 100vh; display: flex; align-items: center;
+            background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #60A5FA 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float { 0% { transform: translateX(0) translateY(0); } 100% { transform: translateX(-60px) translateY(-60px); } }
+
+        .hero-content { position: relative; z-index: 2; color: var(--white); max-width: 800px; }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.5rem 1rem;
+            border-radius: 9999px; font-size: 0.875rem; font-weight: 500; margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.25rem, 8vw, 3.75rem); font-weight: 900; line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-description {
+            font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9; line-height: 1.6;
+        }
+
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; }
+
+        .hero-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem;
+        }
+
+        .hero-stat { text-align: center; }
+
+        .hero-stat-number { display: block; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.25rem; }
+
+        .hero-stat-label { font-size: 0.875rem; opacity: 0.8; }
+
+        /* Sections */
+        .section { padding: 6rem 0; }
+
+        .section-header { text-align: center; margin-bottom: 4rem; }
+
+        .section-badge {
+            display: inline-block; background: #EFF6FF; color: var(--primary);
+            padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem;
+            font-weight: 600; margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.875rem, 6vw, 3rem); font-weight: 800; line-height: 1.2;
+            color: var(--gray-900); margin-bottom: 1rem;
+        }
+
+        .section-description {
+            font-size: 1.125rem; color: var(--gray-600); max-width: 600px;
+            margin: 0 auto; line-height: 1.6;
+        }
+
+        /* Services */
+        .services { background: var(--white); }
+
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+
+        .service-card {
+            background: var(--white); padding: 2rem; border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+
+        .service-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: var(--gradient);
+        }
+
+        .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+        .service-icon {
+            width: 64px; height: 64px; background: var(--gradient); border-radius: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--white);
+        }
+
+        .service-title {
+            font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.75rem;
+        }
+
+        .service-description { color: var(--gray-600); line-height: 1.6; }
+
+        /* Rooms */
+        .rooms { background: var(--gray-50); }
+
+        .rooms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+
+        .room-card {
+            background: var(--white); border-radius: 1.5rem; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.3s;
+        }
+
+        .room-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+        .room-image {
+            height: 240px; background: linear-gradient(135deg, var(--gray-200) 0%, #CBD5E1 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gray-500); font-weight: 600; font-size: 1.125rem; position: relative;
+        }
+
+        .room-badge {
+            position: absolute; top: 1rem; right: 1rem; background: var(--gradient);
+            color: var(--white); padding: 0.5rem 0.75rem; border-radius: 9999px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+
+        .room-content { padding: 1.5rem; }
+
+        .room-header {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;
+        }
+
+        .room-title {
+            font-size: 1.125rem; font-weight: 700; color: var(--gray-900);
+            line-height: 1.3; margin-bottom: 0.25rem;
+        }
+
+        .room-capacity { color: var(--gray-500); font-size: 0.875rem; }
+
+        .room-price {
+            font-size: 1.5rem; font-weight: 800; color: var(--primary); text-align: right;
+        }
+
+        .room-price-period { font-size: 0.875rem; font-weight: 500; color: var(--gray-500); }
+
+        .room-features { list-style: none; margin-bottom: 1.5rem; }
+
+        .room-feature {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0;
+            font-size: 0.875rem; color: var(--gray-600);
+        }
+
+        .room-feature::before {
+            content: '✓'; color: var(--primary); font-weight: 700; width: 16px; text-align: center;
+        }
+
+        .room-actions { display: flex; gap: 0.75rem; }
+
+        /* Gallery Card */
+        .gallery-card { background: var(--gradient); color: var(--white); position: relative; overflow: hidden; }
+
+        .gallery-content {
+            position: relative; z-index: 2; text-align: center; padding: 3rem 1.5rem;
+        }
+
+        .gallery-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.9; }
+
+        .gallery-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+
+        .gallery-description { margin-bottom: 1.5rem; opacity: 0.9; line-height: 1.6; }
+
+        /* Location */
+        .location { background: var(--white); }
+
+        .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+
+        .location-highlight {
+            background: var(--gradient); color: var(--white); padding: 1.5rem;
+            border-radius: 1.5rem; text-align: center; margin-bottom: 2rem;
+        }
+
+        .location-highlight-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+        .location-highlight-text { opacity: 0.9; }
+
+        .steps-list {
+            list-style: none; background: var(--gray-50); padding: 1.5rem;
+            border-radius: 1rem; margin-bottom: 2rem;
+        }
+
+        .steps-title {
+            font-size: 1.125rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;
+        }
+
+        .step-item {
+            display: flex; align-items: flex-start; gap: 1rem; padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .step-item:last-child { border-bottom: none; }
+
+        .step-number {
+            min-width: 32px; height: 32px; background: var(--primary); color: var(--white);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.875rem; flex-shrink: 0;
+        }
+
+        .step-text { color: var(--gray-700); line-height: 1.5; }
+
+        .nearby-places { list-style: none; }
+
+        .nearby-place {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200); transition: all 0.3s;
+        }
+
+        .nearby-place:last-child { border-bottom: none; }
+
+        .nearby-place:hover {
+            background-color: var(--gray-50); border-radius: 0.5rem;
+            padding-left: 1rem; padding-right: 1rem;
+        }
+
+        .nearby-icon { font-size: 1.125rem; width: 24px; text-align: center; }
+
+        .nearby-text { color: var(--gray-700); font-weight: 500; }
+
+        .map-container { border-radius: 1.5rem; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+        .map-placeholder {
+            height: 400px; background: linear-gradient(135deg, var(--gray-200) 0%, #CBD5E1 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--gray-500); font-weight: 600;
+        }
+
+        .map-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        .map-text { text-align: center; }
+
+        .map-address { font-size: 0.875rem; opacity: 0.7; margin-top: 0.5rem; }
+
+        /* Testimonials */
+        .testimonials { background: var(--gray-50); }
+
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+
+        .testimonial-card {
+            background: var(--white); padding: 2rem; border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.3s; position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"'; position: absolute; top: -10px; left: 1.5rem; font-size: 4rem;
+            color: #EFF6FF; font-family: serif; line-height: 1;
+        }
+
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+        .testimonial-stars {
+            display: flex; gap: 0.25rem; margin-bottom: 1rem; color: #FCD34D; font-size: 1.125rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.125rem; line-height: 1.6; color: var(--gray-700);
+            margin-bottom: 1.5rem; font-style: italic;
+        }
+
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+
+        .author-avatar {
+            width: 48px; height: 48px; background: var(--gradient); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--white); font-weight: 700; font-size: 1.125rem;
+        }
+
+        .author-info { flex: 1; }
+
+        .author-name { font-weight: 700; color: var(--gray-900); margin-bottom: 0.25rem; }
+
+        .author-role { font-size: 0.875rem; color: var(--gray-500); }
+
+        /* Blog Preview */
+        .blog-preview { background: var(--gradient); color: var(--white); position: relative; overflow: hidden; }
+
+        .blog-content {
+            position: relative; z-index: 2; text-align: center; max-width: 800px; margin: 0 auto;
+        }
+
+        .blog-icon {
+            width: 80px; height: 80px; background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem; display: flex; align-items: center; justify-content: center;
+            font-size: 1.875rem; margin: 0 auto 1.5rem;
+        }
+
+        .blog-title { font-size: clamp(1.875rem, 6vw, 3rem); font-weight: 900; margin-bottom: 1rem; }
+
+        .blog-description { font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9; line-height: 1.6; }
+
+        /* Contact */
+        .contact { background: var(--white); }
+
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+
+        .contact-info {
+            background: var(--gray-50); padding: 2rem; border-radius: 1.5rem; height: fit-content;
+        }
+
+        .contact-info-title {
+            font-size: 1.5rem; font-weight: 800; color: var(--gray-900); margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;
+            padding: 1rem; background: var(--white); border-radius: 1rem; transition: all 0.3s;
+        }
+
+        .contact-item:hover { transform: translateX(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+        .contact-icon {
+            width: 48px; height: 48px; background: var(--gradient); border-radius: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.125rem; color: var(--white); flex-shrink: 0;
+        }
+
+        .contact-details h4 { font-weight: 700; color: var(--gray-900); margin-bottom: 0.25rem; }
+
+        .contact-details p { color: var(--gray-600); line-height: 1.5; }
+
+        .contact-details a {
+            color: var(--primary); text-decoration: none; font-weight: 600; transition: color 0.3s;
+        }
+
+        .contact-details a:hover { color: var(--primary-light); }
+
+        .contact-actions {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;
+        }
+
+        .quick-contact-btn {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem; border-radius: 0.75rem; text-decoration: none;
+            font-weight: 600; transition: all 0.3s;
+        }
+
+        .whatsapp-btn { background: #25D366; color: var(--white); }
+
+        .whatsapp-btn:hover { background: #128C7E; transform: translateY(-2px); }
+
+        .phone-btn { background: var(--gray-700); color: var(--white); }
+
+        .phone-btn:hover { background: var(--gray-900); transform: translateY(-2px); }
+
+        .contact-form {
+            background: var(--white); padding: 2rem; border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); border: 1px solid var(--gray-200);
+        }
+
+        .form-title {
+            font-size: 1.5rem; font-weight: 800; color: var(--gray-900);
+            margin-bottom: 2rem; text-align: center;
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        .form-label {
+            display: block; font-weight: 600; color: var(--gray-700);
+            margin-bottom: 0.5rem; font-size: 0.875rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%; padding: 1rem; border: 2px solid var(--gray-200);
+            border-radius: 0.75rem; background: var(--white); font-size: 1rem; transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .form-textarea { min-height: 120px; resize: vertical; }
+
+        .form-submit {
+            width: 100%; background: var(--gradient); color: var(--white); border: none;
+            padding: 1rem 1.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+        }
+
+        .form-submit::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px); box-shadow: 0 20px 40px rgba(37, 99, 235, 0.4);
+        }
+
+        .form-submit:hover::before { left: 100%; }
+
+        /* Footer */
+        .footer { background: var(--gray-900); color: var(--white); position: relative; overflow: hidden; }
+
+        .footer-container { position: relative; z-index: 2; padding: 5rem 0 2rem; }
+
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem;
+        }
+
+        .footer-brand { max-width: 350px; }
+
+        .footer-logo {
+            font-size: 1.875rem; font-weight: 900; background: var(--gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: #94A3B8; line-height: 1.6; margin-bottom: 1.5rem;
+        }
+
+        .footer-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gradient);
+            padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600;
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--white);
+        }
+
+        .footer-links { list-style: none; }
+
+        .footer-links li { margin-bottom: 0.75rem; }
+
+        .footer-links a {
+            color: #94A3B8; text-decoration: none; transition: all 0.3s;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .footer-links a:hover { color: var(--white); transform: translateX(4px); }
+
+        .footer-bottom {
+            border-top: 1px solid #334155; padding-top: 2rem; text-align: center; color: #64748B;
+        }
+
+        /* WhatsApp Float */
+        .whatsapp-float {
+            position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1001;
+            width: 64px; height: 64px; background: #25D366; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: var(--white); text-decoration: none;
+            box-shadow: 0 20px 40px rgba(37, 211, 102, 0.4); transition: all 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-float:hover { transform: scale(1.1); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Animations */
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .fade-in-up { animation: slideUp 0.6s ease-out forwards; }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .location-grid { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .nav { display: none; }
+            .phone-cta { display: none; }
+            .hero { padding: 6rem 1rem 4rem; }
+            .hero-actions { flex-direction: column; width: 100%; max-width: 400px; margin: 0 auto; }
+            .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .section { padding: 4rem 0; }
+            .services-grid, .rooms-grid, .testimonials-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .contact-actions { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+            .footer-brand { max-width: none; }
+            .whatsapp-float { bottom: 1rem; right: 1rem; width: 56px; height: 56px; font-size: 1.25rem; }
+        }
+
+        @media (min-width: 769px) {
+            .nav { display: flex; }
+            .phone-cta { display: flex; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-container">
+                <div class="logo">Hostal HDQ</div>
+                
+                <nav class="nav">
+                    <a href="#inicio" class="nav-link">Inicio</a>
+                    <a href="#servicios" class="nav-link">Servicios</a>
+                    <a href="#habitaciones" class="nav-link">Habitaciones</a>
+                    <a href="#ubicacion" class="nav-link">Ubicación</a>
+                    <a href="#contacto" class="nav-link">Contacto</a>
+                </nav>
+
+                <div class="header-actions">
+                    <a href="tel:+56987752280" class="phone-cta">📞 +56 9 8775 2280</a>
+                    <a href="#contacto" class="btn btn-primary">Reservar</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">⭐ Registrado en SERNATUR desde 2013</div>
+                
+                <h1 class="hero-title">
+                    El Mejor Hostal en<br>
+                    <span style="background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sector Collao</span>
+                </h1>
+                
+                <p class="hero-description">
+                    A solo 850 metros del Terminal Collao. Habitaciones cómodas, precios justos, atención familiar personalizada. Tu hogar lejos de casa en Concepción.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#contacto" class="btn btn-primary btn-lg">Reservar Ahora</a>
+                    <a href="#habitaciones" class="btn btn-glass btn-lg">Ver Habitaciones</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">15</span>
+                        <span class="hero-stat-label">Años de experiencia</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">850m</span>
+                        <span class="hero-stat-label">Del Terminal Collao</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">10</span>
+                        <span class="hero-stat-label">Habitaciones disponibles</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">100%</span>
+                        <span class="hero-stat-label">Atención familiar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicios" class="section services">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Servicios Destacados</div>
+                <h2 class="section-title">Por qué elegir Hostal HDQ</h2>
+                <p class="section-description">
+                    Ofrecemos los mejores servicios para hacer de tu estadía una experiencia memorable en el corazón de Concepción.
+                </p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🚌</div>
+                    <h3 class="service-title">A 850m del Terminal Collao</h3>
+                    <p class="service-description">
+                        Ubicación estratégica en el centro neurálgico del 70% de llegadas turísticas a Concepción. Camina solo 10 minutos desde el terminal.
+                    </p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📶</div>
+                    <h3 class="service-title">WiFi Gratis 100MB</h3>
+                    <p class="service-description">
+                        Internet de alta velocidad gratuito en todas las habitaciones, perfecto para trabajo remoto y entretenimiento.
+                    </p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🚗</div>
+                    <h3 class="service-title">Estacionamiento Privado</h3>
+                    <p class="service-description">
+                        Estacionamiento gratuito con cámaras de seguridad las 24 horas para tu total tranquilidad.
+                    </p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🛁</div>
+                    <h3 class="service-title">Habitaciones Completas</h3>
+                    <p class="service-description">
+                        Baño privado, TV cable, frigobar, microondas y todo el equipamiento necesario para tu comodidad.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Section -->
+    <section id="habitaciones" class="section rooms">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Habitaciones</div>
+                <h2 class="section-title">Encuentra tu espacio perfecto</h2>
+                <p class="section-description">
+                    10 habitaciones diseñadas para tu comodidad, equipadas con todo lo necesario para una estadía perfecta.
+                </p>
+            </div>
+
+            <div class="rooms-grid">
+                <div class="room-card">
+                    <div class="room-image">
+                        <div class="room-badge">Disponible</div>
+                        Habitación 101
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <div>
+                                <h3 class="room-title">Habitación 101 - Doble/2 Camas</h3>
+                                <p class="room-capacity">Capacidad: 2 personas</p>
+                            </div>
+                            <div class="room-price">
+                                $40.000<span class="room-price-period">/noche</span>
+                            </div>
+                        </div>
+
+                        <ul class="room-features">
+                            <li class="room-feature">Baño privado con ducha</li>
+                            <li class="room-feature">TV cable y WiFi gratis</li>
+                            <li class="room-feature">Frigobar y microondas</li>
+                            <li class="room-feature">Té y café de cortesía</li>
+                        </ul>
+
+                        <div class="room-actions">
+                            <a href="#contacto" class="btn btn-primary" style="flex: 1;">Reservar</a>
+                            <a href="https://fotos.hostalhdq.cl" class="btn btn-secondary">Fotos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image">
+                        <div class="room-badge">Popular</div>
+                        Habitación 102
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <div>
+                                <h3 class="room-title">Habitación 102 - Doble/2 ambientes</h3>
+                                <p class="room-capacity">Capacidad: 4 personas</p>
+                            </div>
+                            <div class="room-price">
+                                $80.000<span class="room-price-period">/noche</span>
+                            </div>
+                        </div>
+
+                        <ul class="room-features">
+                            <li class="room-feature">Dos ambientes separados</li>
+                            <li class="room-feature">Baño privado completo</li>
+                            <li class="room-feature">Área de estar independiente</li>
+                            <li class="room-feature">Equipamiento completo</li>
+                        </ul>
+
+                        <div class="room-actions">
+                            <a href="#contacto" class="btn btn-primary" style="flex: 1;">Reservar</a>
+                            <a href="https://fotos.hostalhdq.cl" class="btn btn-secondary">Fotos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image">
+                        <div class="room-badge">Disponible</div>
+                        Habitación 103
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <div>
+                                <h3 class="room-title">Habitación 103 - Doble/Matrimonial</h3>
+                                <p class="room-capacity">Capacidad: 2 personas</p>
+                            </div>
+                            <div class="room-price">
+                                $40.000<span class="room-price-period">/noche</span>
+                            </div>
+                        </div>
+
+                        <ul class="room-features">
+                            <li class="room-feature">Cama matrimonial cómoda</li>
+                            <li class="room-feature">Escritorio y área de trabajo</li>
+                            <li class="room-feature">Vajillería completa</li>
+                            <li class="room-feature">Servicio de aseo diario</li>
+                        </ul>
+
+                        <div class="room-actions">
+                            <a href="#contacto" class="btn btn-primary" style="flex: 1;">Reservar</a>
+                            <a href="https://fotos.hostalhdq.cl" class="btn btn-secondary">Fotos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image">
+                        <div class="room-badge">Familiar</div>
+                        Habitación 205
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <div>
+                                <h3 class="room-title">Habitación 205 - Triple</h3>
+                                <p class="room-capacity">Capacidad: 3 personas</p>
+                            </div>
+                            <div class="room-price">
+                                $60.000<span class="room-price-period">/noche</span>
+                            </div>
+                        </div>
+
+                        <ul class="room-features">
+                            <li class="room-feature">1 cama matrimonial + 1 individual</li>
+                            <li class="room-feature">Espacio amplio y cómodo</li>
+                            <li class="room-feature">Ideal para familias</li>
+                            <li class="room-feature">Equipamiento completo</li>
+                        </ul>
+
+                        <div class="room-actions">
+                            <a href="#contacto" class="btn btn-primary" style="flex: 1;">Reservar</a>
+                            <a href="https://fotos.hostalhdq.cl" class="btn btn-secondary">Fotos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image">
+                        <div class="room-badge">Grupos</div>
+                        Habitaciones Grupales
+                    </div>
+                    <div class="room-content">
+                        <div class="room-header">
+                            <div>
+                                <h3 class="room-title">Habitaciones Grupales - 2 Ambientes</h3>
+                                <p class="room-capacity">Capacidad: 4 personas</p>
+                            </div>
+                            <div class="room-price">
+                                $80.000<span class="room-price-period">/noche</span>
+                            </div>
+                        </div>
+
+                        <ul class="room-features">
+                            <li class="room-feature">Dos ambientes independientes</li>
+                            <li class="room-feature">Perfecta para grupos de trabajo</li>
+                            <li class="room-feature">Múltiples configuraciones</li>
+                            <li class="room-feature">Privacidad y comodidad</li>
+                        </ul>
+
+                        <div class="room-actions">
+                            <a href="#contacto" class="btn btn-primary" style="flex: 1;">Reservar</a>
+                            <a href="https://fotos.hostalhdq.cl" class="btn btn-secondary">Fotos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card gallery-card">
+                    <div class="gallery-content">
+                        <div class="gallery-icon">📸</div>
+                        <h3 class="gallery-title">Galería Completa</h3>
+                        <p class="gallery-description">
+                            Explora todas nuestras habitaciones con fotos y videos de alta calidad. Tours virtuales disponibles.
+                        </p>
+                        <a href="https://fotos.hostalhdq.cl" class="btn btn-glass">Ver Galería</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="ubicacion" class="section location">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Ubicación</div>
+                <h2 class="section-title">En el corazón de Concepción</h2>
+                <p class="section-description">
+                    Estratégicamente ubicado en sector Collao, el punto de entrada principal a Concepción.
+                </p>
+            </div>
+
+            <div class="location-grid">
+                <div class="location-content">
+                    <div class="location-highlight">
+                        <h4 class="location-highlight-title">🚌 A solo 850 metros del Terminal Collao</h4>
+                        <p class="location-highlight-text">Caminata de 10 minutos desde el terminal más importante de Concepción</p>
+                    </div>
+                    
+                    <div class="steps-list">
+                        <h3 class="steps-title">Cómo llegar desde Terminal Collao:</h3>
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Sal del terminal hacia la calle Collao</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Camina hacia el norte por calle Collao</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-text">Gira a la izquierda en calle Chiloé</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-text">Camina 2 cuadras hasta el número 1130</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-text">¡Ya llegaste a Hostal HDQ!</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Lugares cercanos:</h3>
+                    <ul class="nearby-places">
+                        <li class="nearby-place">
+                            <span class="nearby-icon">🎓</span>
+                            <span class="nearby-text">Universidad del Bío Bío - 15 min caminando</span>
+                        </li>
+                        <li class="nearby-place">
+                            <span class="nearby-icon">⚽</span>
+                            <span class="nearby-text">Estadio Ester Roa - 10 min caminando</span>
+                        </li>
+                        <li class="nearby-place">
+                            <span class="nearby-icon">🏛️</span>
+                            <span class="nearby-text">Centro de Concepción - 20 min en transporte público</span>
+                        </li>
+                        <li class="nearby-place">
+                            <span class="nearby-icon">🚌</span>
+                            <span class="nearby-text">Terminal de Buses - 850 metros</span>
+                        </li>
+                        <li class="nearby-place">
+                            <span class="nearby-icon">🛒</span>
+                            <span class="nearby-text">Supermercados y comercio local - 5 min caminando</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <div class="map-icon">🗺️</div>
+                        <div class="map-text">
+                            <p>Mapa interactivo de Google Maps</p>
+                            <p class="map-address">Chiloé 1130, Sector Collao, Concepción</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Testimonios</div>
+                <h2 class="section-title">Lo que dicen nuestros huéspedes</h2>
+                <p class="section-description">
+                    Miles de huéspedes satisfechos avalan la calidad de nuestro servicio y atención personalizada.
+                </p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">
+                        "Excelente ubicación en sector Collao, cerca del terminal. Habitaciones muy limpias y cómodas. La atención familiar hace la diferencia."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MG</div>
+                        <div class="author-info">
+                            <div class="author-name">María González</div>
+                            <div class="author-role">Viajera de negocios</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">
+                        "El mejor hostal de Concepción. Precios justos y atención familiar excepcional. Recomendado 100%. Volveré sin dudas."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">CM</div>
+                        <div class="author-info">
+                            <div class="author-name">Carlos Muñoz</div>
+                            <div class="author-role">Turista nacional</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">
+                        "Perfecto para viajeros de trabajo. WiFi excelente, estacionamiento seguro y muy conveniente. Todo lo que necesitas."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AS</div>
+                        <div class="author-info">
+                            <div class="author-name">Ana Sepúlveda</div>
+                            <div class="author-role">Ejecutiva comercial</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Preview Section -->
+    <section class="section blog-preview">
+        <div class="container">
+            <div class="blog-content">
+                <div class="blog-icon">🏛️</div>
+                <h2 class="blog-title">Descubre Concepción</h2>
+                <p class="blog-description">
+                    Tu guía completa para explorar Concepción. Lugares imperdibles, restaurantes, transporte y actividades desde el sector Collao.
+                </p>
+                <a href="https://blog.hostalhdq.cl" class="btn btn-glass btn-lg">Ver guía completa</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="section contact">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Contacto</div>
+                <h2 class="section-title">Reserva tu habitación</h2>
+                <p class="section-description">
+                    Múltiples formas de contactarnos. Respuesta garantizada en menos de 2 horas.
+                </p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3 class="contact-info-title">Información de Contacto</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Dirección</h4>
+                            <p>Chiloé 1130, Sector Collao<br>Concepción, Chile</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h4>Teléfono</h4>
+                            <p><a href="tel:+56987752280">+56 9 8775 2280</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p><a href="mailto:hostalhdq@gmail.com">hostalhdq@gmail.com</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">🕐</div>
+                        <div class="contact-details">
+                            <h4>Horario de Atención</h4>
+                            <p>Lunes a Domingo<br>8:00 AM - 10:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-actions">
+                        <a href="https://wa.me/56987752280?text=Hola%20Hostal%20HDQ,%20quiero%20hacer%20una%20reserva" class="quick-contact-btn whatsapp-btn">
+                            💬 WhatsApp
+                        </a>
+                        <a href="tel:+56987752280" class="quick-contact-btn phone-btn">
+                            📞 Llamar
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h3 class="form-title">Formulario de Reserva</h3>
+                    <form id="reservationForm">
+                        <div class="form-group">
+                            <label for="nombre" class="form-label">Nombre Completo *</label>
+                            <input type="text" id="nombre" name="nombre" class="form-input" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono" class="form-label">Teléfono *</label>
+                                <input type="tel" id="telefono" name="telefono" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="checkin" class="form-label">Fecha de Entrada *</label>
+                                <input type="date" id="checkin" name="checkin" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout" class="form-label">Fecha de Salida *</label>
+                                <input type="date" id="checkout" name="checkout" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="habitacion" class="form-label">Tipo de Habitación *</label>
+                                <select id="habitacion" name="habitacion" class="form-select" required>
+                                    <option value="">Seleccionar habitación</option>
+                                    <option value="doble-2camas">Doble/2 Camas - $40.000</option>
+                                    <option value="doble-matrimonial">Doble/Matrimonial - $40.000</option>
+                                    <option value="triple">Triple - $60.000</option>
+                                    <option value="doble-2ambientes">Doble/2 Ambientes - $80.000</option>
+                                    <option value="grupal-2ambientes">Grupal/2 Ambientes - $80.000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="personas" class="form-label">Número de Personas *</label>
+                                <select id="personas" name="personas" class="form-select" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="1">1 persona</option>
+                                    <option value="2">2 personas</option>
+                                    <option value="3">3 personas</option>
+                                    <option value="4">4 personas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mensaje" class="form-label">Mensaje Adicional</label>
+                            <textarea id="mensaje" name="mensaje" class="form-textarea" placeholder="Cualquier solicitud especial o comentario..."></textarea>
+                        </div>
+
+                        <button type="submit" class="form-submit">Enviar Reserva</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <div class="footer-logo">Hostal HDQ</div>
+                        <p class="footer-description">
+                            Tu alojamiento familiar en el corazón de Concepción. 15 años de experiencia brindando la mejor atención a turistas, trabajadores y estudiantes.
+                        </p>
+                        <div class="footer-badge">⭐ Registrado en SERNATUR desde 2013</div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Enlaces Rápidos</h4>
