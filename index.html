@@ -1,545 +1,119 @@
+import React, { useState } from 'react';
+import { Calendar, DollarSign, CheckCircle, Copy } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reservas - Hostal HDQ</title>
-  <style>
-    * {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+export default function HostalHDQReservas() {
+  const [step, setStep] = useState('paso1');
+  const [enviandoEmail, setEnviandoEmail] = useState(false);
+  const [formData, setFormData] = useState({
+    checkIn: '',
+    checkOut: '',
+    tipoHabitacion: '',
+    nombre: '',
+    rut: '',
+    email: '',
+    solicitar: ''
+  });
+  const [cotizacion, setCotizacion] = useState(null);
+  const [datosCopiados, setDatosCopiados] = useState(false);
+
+  const precios = {
+    'Matrimonial / Single': 40000,
+    'Triple': 60000,
+    'Familiar / Delegación': 80000
+  };
+
+  // Configuración de EmailJS - REEMPLAZA CON TUS DATOS
+  const EMAILJS_SERVICE_ID = 'TU_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID = 'TU_TEMPLATE_ID';
+  const EMAILJS_PUBLIC_KEY = 'TU_PUBLIC_KEY';
+
+  const handlePaso1 = () => {
+    if (!formData.checkIn || !formData.checkOut || !formData.tipoHabitacion) {
+      alert('Por favor completa todos los campos');
+      return;
     }
 
-    body {
-      background: linear-gradient(to bottom right, #f0fdf4, #ffffff, #f0fdfa);
-      padding: 2rem 1rem;
-      min-height: 100vh;
+    const inicio = new Date(formData.checkIn);
+    const fin = new Date(formData.checkOut);
+    const noches = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+
+    if (noches <= 0) {
+      alert('La fecha de salida debe ser posterior a la de entrada');
+      return;
     }
 
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
+    const precioNoche = precios[formData.tipoHabitacion];
+    const subtotal = precioNoche * noches;
+    const abono = 15000;
+    const saldo = subtotal - abono;
 
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    setCotizacion({
+      noches,
+      precioNoche,
+      subtotal,
+      abono,
+      saldo
+    });
 
-    .header h1 {
-      font-size: 2.5rem;
-      color: #065f46;
-      margin-bottom: 0.5rem;
-    }
+    setStep('paso2');
+  };
 
-    .header p {
-      color: #666;
-    }
-
-    .card {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 20px 25px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-
-    .card-header {
-      background: linear-gradient(to right, #059669, #14b8a6);
-      color: white;
-      padding: 1rem 1.5rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-    }
-
-    .card-body {
-      padding: 2rem;
-    }
-
-    .welcome-box {
-      background: linear-gradient(to bottom right, #f0fdf4, #f0fdfa);
-      border: 1px solid #86efac;
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .welcome-box h2 {
-      font-size: 1.5rem;
-      color: #065f46;
-      margin-bottom: 0.5rem;
-    }
-
-    .welcome-box p {
-      color: #047857;
-      font-size: 0.875rem;
-      margin: 0.5rem 0;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #1f2937;
-      margin-bottom: 0.5rem;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.5rem 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      font-family: inherit;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      ring: 2px solid #059669;
-      border-color: transparent;
-    }
-
-    .button {
-      padding: 0.75rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 1rem;
-    }
-
-    .btn-primary {
-      width: 100%;
-      background: #059669;
-      color: white;
-      margin-top: 1rem;
-    }
-
-    .btn-primary:hover {
-      background: #047857;
-    }
-
-    .btn-secondary {
-      background: #d1d5db;
-      color: #1f2937;
-    }
-
-    .btn-secondary:hover {
-      background: #9ca3af;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .button-group button {
-      flex: 1;
-    }
-
-    .info-box {
-      padding: 1rem;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
-      border-left: 4px solid;
-    }
-
-    .info-box.info {
-      background: #eff6ff;
-      border-color: #0284c7;
-      color: #0c4a6e;
-    }
-
-    .info-box.warning {
-      background: #fffbeb;
-      border-color: #f59e0b;
-      color: #92400e;
-    }
-
-    .info-box.success {
-      background: #f0fdf4;
-      border-color: #22c55e;
-      color: #166534;
-    }
-
-    .summary-box {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.75rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .summary-row:last-child {
-      border-bottom: none;
-      font-weight: 600;
-      color: #059669;
-    }
-
-    .step-indicator {
-      font-size: 0.75rem;
-      color: #6b7280;
-      margin-bottom: 1rem;
-    }
-
-    .success-message {
-      text-align: center;
-      padding: 1.5rem;
-      background: #dcfce7;
-      border: 2px solid #22c55e;
-      border-radius: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .success-message h3 {
-      color: #166534;
-      margin-bottom: 0.5rem;
-    }
-
-    .success-message p {
-      color: #4ade80;
-    }
-
-    .data-box {
-      background: #f3f4f6;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      font-family: 'Courier New', monospace;
-      font-size: 0.75rem;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-      color: #666;
-      font-size: 0.875rem;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>🏨 Hostal HDQ</h1>
-      <p>Solicitud de Reserva - Concepción</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header" id="stepIndicator">📅 Paso 1 de 3: Fechas y Tipo de Habitación</div>
-      <div class="card-body">
-        <!-- PASO 1 -->
-        <div id="paso1">
-          <div class="welcome-box">
-            <h2>¡Hola! Bienvenido a Hostal HDQ Concepción</h2>
-            <p>Soy el asistente de reservas de David Quiero Barrientos. Vamos a realizar tu solicitud de reserva en 3 pasos simples.</p>
-            <p>📍 Calle Chiloé 1130, Sector Collao | 850m del Terminal Collao y Estadio Ester Roa</p>
-            <p>✓ Delegaciones (Artes Marciales, Vóley, Ciclismo) | ✓ Familias</p>
-          </div>
-
-          <div class="form-group">
-            <label>Fecha de Entrada</label>
-            <input type="date" id="checkIn" />
-          </div>
-
-          <div class="form-group">
-            <label>Fecha de Salida</label>
-            <input type="date" id="checkOut" />
-          </div>
-
-          <div class="form-group">
-            <label>Tipo de Habitación</label>
-            <select id="tipoHabitacion">
-              <option value="">Selecciona una opción</option>
-              <option value="Matrimonial / Single">Matrimonial / Single - $40.000</option>
-              <option value="Triple">Triple - $60.000</option>
-              <option value="Familiar / Delegación">Familiar / Delegación - $80.000 (4 personas base)</option>
-            </select>
-          </div>
-
-          <button class="button btn-primary" onclick="handlePaso1()">Continuar al Paso 2</button>
-        </div>
-
-        <!-- PASO 2 -->
-        <div id="paso2" class="hidden">
-          <div class="summary-box">
-            <h3>Resumen de tu solicitud</h3>
-            <div class="summary-row">
-              <span>Entrada:</span>
-              <span id="summaryCheckIn"></span>
-            </div>
-            <div class="summary-row">
-              <span>Salida:</span>
-              <span id="summaryCheckOut"></span>
-            </div>
-            <div class="summary-row">
-              <span>Habitación:</span>
-              <span id="summaryHabitacion"></span>
-            </div>
-            <div class="summary-row">
-              <span>Noches:</span>
-              <span id="summaryNoches"></span>
-            </div>
-            <div class="summary-row">
-              <span>Total:</span>
-              <span id="summaryTotal"></span>
-            </div>
-          </div>
-
-          <div class="info-box info">
-            <strong>ℹ️ Nota importante:</strong> Una vez aceptada tu solicitud, podrás solicitar los datos bancarios para realizar el depósito de $15.000.
-          </div>
-
-          <div class="form-group">
-            <label>Nombre Completo</label>
-            <input type="text" id="nombre" placeholder="Tu nombre y apellido" />
-          </div>
-
-          <div class="form-group">
-            <label>RUT</label>
-            <input type="text" id="rut" placeholder="XX.XXX.XXX-X" />
-          </div>
-
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="email" placeholder="tu@email.com" />
-          </div>
-
-          <div class="button-group">
-            <button class="button btn-secondary" onclick="goToStep('paso1')">Volver</button>
-            <button class="button btn-primary" onclick="handlePaso2()">Continuar al Paso 3</button>
-          </div>
-        </div>
-
-        <!-- PASO 3 -->
-        <div id="paso3" class="hidden">
-          <div class="success-message">
-            <h3>Solicitud Pendiente de Aprobación</h3>
-            <p>Tu solicitud ha sido registrada correctamente.</p>
-          </div>
-
-          <div class="summary-box">
-            <h4>Resumen de tu solicitud</h4>
-            <div class="summary-row">
-              <span>Nombre:</span>
-              <span id="paso3Nombre"></span>
-            </div>
-            <div class="summary-row">
-              <span>RUT:</span>
-              <span id="paso3Rut"></span>
-            </div>
-            <div class="summary-row">
-              <span>Email:</span>
-              <span id="paso3Email"></span>
-            </div>
-            <div class="summary-row">
-              <span>Entrada:</span>
-              <span id="paso3CheckIn"></span>
-            </div>
-            <div class="summary-row">
-              <span>Salida:</span>
-              <span id="paso3CheckOut"></span>
-            </div>
-            <div class="summary-row">
-              <span>Habitación:</span>
-              <span id="paso3Habitacion"></span>
-            </div>
-            <div class="summary-row">
-              <span>Total:</span>
-              <span id="paso3Total"></span>
-            </div>
-          </div>
-
-          <div class="info-box warning">
-            <strong>⏳ Próximo paso:</strong> Una vez que tu solicitud sea aceptada, escribe SOLICITAR para acceder a los datos bancarios y realizar el depósito de $15.000.
-          </div>
-
-          <div class="form-group">
-            <label>Cuando tu solicitud sea aprobada, escribe SOLICITAR:</label>
-            <input type="text" id="solicitar" placeholder="Escribe SOLICITAR" />
-          </div>
-
-          <div class="button-group">
-            <button class="button btn-secondary" onclick="goToStep('paso2')">Volver</button>
-            <button class="button btn-primary" onclick="handleSolicitar()">Verificar</button>
-          </div>
-        </div>
-
-        <!-- DATOS FINALES -->
-        <div id="datosFinales" class="hidden">
-          <div class="success-message">
-            <h3>¡Solicitud Aceptada!</h3>
-            <p>Ya puedes proceder a realizar el depósito.</p>
-          </div>
-
-          <div class="summary-box">
-            <h4>Detalles de Pago</h4>
-            <div class="summary-row">
-              <span>Abono requerido:</span>
-              <span id="pagoAbono"></span>
-            </div>
-            <div class="summary-row">
-              <span>Saldo a pagar en el hostal:</span>
-              <span id="pagoSaldo"></span>
-            </div>
-          </div>
-
-          <div class="summary-box">
-            <h4>Datos de Transferencia - HOSTAL HDQ</h4>
-            <div class="data-box">
-              <div>Titular: David Quiero Barrientos</div>
-              <div>RUT: 13.506.566-8</div>
-              <div>Banco: Santander</div>
-              <div>Tipo de Cuenta: Cuenta Corriente</div>
-              <div>N° de Cuenta: 3919951</div>
-              <div>Monto Abono: $15.000</div>
-              <div>Correo: hostalhdq@gmail.com</div>
-            </div>
-            <button class="button btn-primary" onclick="copiarDatos()">Copiar Datos de Transferencia</button>
-          </div>
-
-          <div class="info-box warning">
-            <strong>⏱️ Importante:</strong> Tienes 3 horas para realizar la transferencia.
-          </div>
-
-          <button class="button btn-primary" onclick="resetForm()">Nueva Solicitud de Reserva</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p>¿Preguntas? Contacta a <strong>hostalhdq@gmail.com</strong></p>
-    </div>
-  </div>
-
-  <script>
-    const precios = {
-      'Matrimonial / Single': 40000,
-      'Triple': 60000,
-      'Familiar / Delegación': 80000
+  const enviarEmailSolicitud = async () => {
+    setEnviandoEmail(true);
+    
+    const templateParams = {
+      to_email: 'hostalhdq@gmail.com',
+      cliente_nombre: formData.nombre,
+      cliente_rut: formData.rut,
+      cliente_email: formData.email,
+      fecha_entrada: new Date(formData.checkIn).toLocaleDateString('es-CL'),
+      fecha_salida: new Date(formData.checkOut).toLocaleDateString('es-CL'),
+      tipo_habitacion: formData.tipoHabitacion,
+      noches: cotizacion.noches,
+      total: `$${cotizacion.subtotal.toLocaleString('es-CL')}`,
+      abono: `$${cotizacion.abono.toLocaleString('es-CL')}`,
+      saldo: `$${cotizacion.saldo.toLocaleString('es-CL')}`
     };
 
-    let cotizacion = null;
-
-    function handlePaso1() {
-      const checkIn = document.getElementById('checkIn').value;
-      const checkOut = document.getElementById('checkOut').value;
-      const tipoHabitacion = document.getElementById('tipoHabitacion').value;
-
-      if (!checkIn || !checkOut || !tipoHabitacion) {
-        alert('Por favor completa todos los campos');
-        return;
-      }
-
-      const inicio = new Date(checkIn);
-      const fin = new Date(checkOut);
-      const noches = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
-
-      if (noches <= 0) {
-        alert('La fecha de salida debe ser posterior a la de entrada');
-        return;
-      }
-
-      const precioNoche = precios[tipoHabitacion];
-      const subtotal = precioNoche * noches;
-      const abono = 15000;
-      const saldo = subtotal - abono;
-
-      cotizacion = { noches, precioNoche, subtotal, abono, saldo };
-
-      document.getElementById('summaryCheckIn').textContent = new Date(checkIn).toLocaleDateString('es-CL');
-      document.getElementById('summaryCheckOut').textContent = new Date(checkOut).toLocaleDateString('es-CL');
-      document.getElementById('summaryHabitacion').textContent = tipoHabitacion;
-      document.getElementById('summaryNoches').textContent = noches;
-      document.getElementById('summaryTotal').textContent = '$' + subtotal.toLocaleString('es-CL');
-
-      goToStep('paso2');
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+      console.log('Email enviado correctamente');
+    } catch (error) {
+      console.error('Error al enviar email:', error);
+      alert('Hubo un error al enviar la solicitud. Por favor intenta nuevamente.');
+    } finally {
+      setEnviandoEmail(false);
     }
+  };
 
-    function handlePaso2() {
-      const nombre = document.getElementById('nombre').value;
-      const rut = document.getElementById('rut').value;
-      const email = document.getElementById('email').value;
-
-      if (!nombre || !rut || !email) {
-        alert('Por favor completa todos tus datos');
-        return;
-      }
-
-      const checkIn = document.getElementById('checkIn').value;
-      const checkOut = document.getElementById('checkOut').value;
-      const tipoHabitacion = document.getElementById('tipoHabitacion').value;
-
-      document.getElementById('paso3Nombre').textContent = nombre;
-      document.getElementById('paso3Rut').textContent = rut;
-      document.getElementById('paso3Email').textContent = email;
-      document.getElementById('paso3CheckIn').textContent = new Date(checkIn).toLocaleDateString('es-CL');
-      document.getElementById('paso3CheckOut').textContent = new Date(checkOut).toLocaleDateString('es-CL');
-      document.getElementById('paso3Habitacion').textContent = tipoHabitacion;
-      document.getElementById('paso3Total').textContent = '$' + cotizacion.subtotal.toLocaleString('es-CL');
-
-      goToStep('paso3');
+  const handlePaso2 = async () => {
+    if (!formData.nombre || !formData.rut || !formData.email) {
+      alert('Por favor completa todos tus datos');
+      return;
     }
+    
+    // Enviar email con la solicitud
+    await enviarEmailSolicitud();
+    
+    setStep('paso3');
+  };
 
-    function handleSolicitar() {
-      const solicitar = document.getElementById('solicitar').value;
-
-      if (solicitar.toUpperCase() !== 'SOLICITAR') {
-        alert('Por favor escribe "SOLICITAR" correctamente');
-        return;
-      }
-
-      document.getElementById('pagoAbono').textContent = '$' + cotizacion.abono.toLocaleString('es-CL');
-      document.getElementById('pagoSaldo').textContent = '$' + cotizacion.saldo.toLocaleString('es-CL');
-
-      goToStep('datosFinales');
+  const handleSolicitar = () => {
+    if (formData.solicitar.toUpperCase() !== 'SOLICITAR') {
+      alert('Por favor escribe "SOLICITAR" correctamente');
+      return;
     }
+    setStep('datosFinales');
+  };
 
-    function goToStep(step) {
-      document.getElementById('paso1').classList.add('hidden');
-      document.getElementById('paso2').classList.add('hidden');
-      document.getElementById('paso3').classList.add('hidden');
-      document.getElementById('datosFinales').classList.add('hidden');
-
-      document.getElementById(step).classList.remove('hidden');
-
-      const stepTexts = {
-        'paso1': '📅 Paso 1 de 3: Fechas y Tipo de Habitación',
-        'paso2': '👤 Paso 2 de 3: Tus Datos',
-        'paso3': '✅ Paso 3 de 3: Solicitud Pendiente',
-        'datosFinales': '💳 Datos de Transferencia'
-      };
-
-      document.getElementById('stepIndicator').textContent = stepTexts[step];
-    }
-
-    function copiarDatos() {
-      const datos = `HOSTAL HDQ - DATOS DE TRANSFERENCIA
+  const copiarDatos = () => {
+    const datos = `HOSTAL HDQ - DATOS DE TRANSFERENCIA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Titular: David Quiero Barrientos
 RUT: 13.506.566-8
@@ -550,21 +124,344 @@ Monto Abono: $15.000
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Correo: hostalhdq@gmail.com`;
 
-      navigator.clipboard.writeText(datos);
-      alert('Datos copiados al portapapeles');
-    }
+    navigator.clipboard.writeText(datos);
+    setDatosCopiados(true);
+    setTimeout(() => setDatosCopiados(false), 2000);
+  };
 
-    function resetForm() {
-      document.getElementById('checkIn').value = '';
-      document.getElementById('checkOut').value = '';
-      document.getElementById('tipoHabitacion').value = '';
-      document.getElementById('nombre').value = '';
-      document.getElementById('rut').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('solicitar').value = '';
-      cotizacion = null;
-      goToStep('paso1');
-    }
-  </script>
-</body>
-</html>
+  const renderPaso1 = () => (
+    <div className="space-y-6 animate-fadeIn">
+      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 border border-emerald-200">
+        <h2 className="text-2xl font-bold text-emerald-900 mb-2">¡Hola! Bienvenido a Hostal HDQ Concepción</h2>
+        <p className="text-emerald-700 mb-3 text-sm">
+          Soy el asistente de reservas de David Quiero Barrientos. Vamos a realizar tu solicitud de reserva en 3 pasos simples.
+        </p>
+        <p className="text-emerald-700 text-xs">
+          📍 Calle Chiloé 1130, Sector Collao | 850m del Terminal Collao y Estadio Ester Roa
+        </p>
+        <p className="text-emerald-700 text-xs mt-2">
+          ✓ Delegaciones (Artes Marciales, Vóley, Ciclismo) | ✓ Familias
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Fecha de Entrada</label>
+          <input
+            type="date"
+            value={formData.checkIn}
+            onChange={(e) => setFormData({ ...formData, checkIn: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Fecha de Salida</label>
+          <input
+            type="date"
+            value={formData.checkOut}
+            onChange={(e) => setFormData({ ...formData, checkOut: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Tipo de Habitación</label>
+          <select
+            value={formData.tipoHabitacion}
+            onChange={(e) => setFormData({ ...formData, tipoHabitacion: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          >
+            <option value="">Selecciona una opción</option>
+            <option value="Matrimonial / Single">Matrimonial / Single - $40.000</option>
+            <option value="Triple">Triple - $60.000</option>
+            <option value="Familiar / Delegación">Familiar / Delegación - $80.000 (4 personas base)</option>
+          </select>
+        </div>
+
+        <button
+          onClick={handlePaso1}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition-all"
+        >
+          Continuar al Paso 2
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderPaso2 = () => (
+    <div className="space-y-6 animate-fadeIn">
+      <div className="bg-white rounded-xl border-2 border-emerald-500 p-6">
+        <h3 className="text-lg font-bold text-emerald-900 mb-4">Resumen de tu solicitud</h3>
+
+        <div className="space-y-2 text-sm text-gray-700 bg-gray-50 p-4 rounded-lg mb-6">
+          <p><strong>Entrada:</strong> {new Date(formData.checkIn).toLocaleDateString('es-CL')}</p>
+          <p><strong>Salida:</strong> {new Date(formData.checkOut).toLocaleDateString('es-CL')}</p>
+          <p><strong>Habitación:</strong> {formData.tipoHabitacion}</p>
+          <p><strong>Noches:</strong> {cotizacion?.noches}</p>
+          <p className="text-emerald-700 font-bold mt-2">Total: ${cotizacion?.subtotal.toLocaleString('es-CL')}</p>
+        </div>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-lg">
+          <p className="text-xs text-blue-900">
+            <strong>ℹ️ Nota importante:</strong> Una vez aceptada tu solicitud, podrás solicitar los datos bancarios para realizar el depósito de $15.000.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Nombre Completo</label>
+          <input
+            type="text"
+            placeholder="Tu nombre y apellido"
+            value={formData.nombre}
+            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">RUT</label>
+          <input
+            type="text"
+            placeholder="XX.XXX.XXX-X"
+            value={formData.rut}
+            onChange={(e) => setFormData({ ...formData, rut: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            placeholder="tu@email.com"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            onClick={() => setStep('paso1')}
+            className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-3 rounded-lg transition-all"
+          >
+            Volver
+          </button>
+          <button
+            onClick={handlePaso2}
+            disabled={enviandoEmail}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50"
+          >
+            {enviandoEmail ? 'Enviando...' : 'Continuar al Paso 3'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderPaso3 = () => (
+    <div className="space-y-6 animate-fadeIn">
+      <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 text-center">
+        <CheckCircle className="text-green-600 mx-auto mb-3" size={40} />
+        <h3 className="text-lg font-bold text-green-900 mb-2">Solicitud Pendiente de Aprobación</h3>
+        <p className="text-green-700 text-sm">Tu solicitud ha sido registrada y enviada correctamente.</p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <h4 className="font-bold text-gray-900">Resumen de tu solicitud</h4>
+        <div className="text-sm text-gray-600 space-y-2 bg-gray-50 p-4 rounded-lg">
+          <p><strong>Nombre:</strong> {formData.nombre}</p>
+          <p><strong>RUT:</strong> {formData.rut}</p>
+          <p><strong>Email:</strong> {formData.email}</p>
+          <p><strong>Entrada:</strong> {new Date(formData.checkIn).toLocaleDateString('es-CL')}</p>
+          <p><strong>Salida:</strong> {new Date(formData.checkOut).toLocaleDateString('es-CL')}</p>
+          <p><strong>Habitación:</strong> {formData.tipoHabitacion}</p>
+          <p className="text-emerald-700 font-bold">Total: ${cotizacion?.subtotal.toLocaleString('es-CL')}</p>
+        </div>
+      </div>
+
+      <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+        <p className="text-sm text-amber-900">
+          <strong>⏳ Próximo paso:</strong> Una vez que tu solicitud sea aceptada, escribe SOLICITAR para acceder a los datos bancarios y realizar el depósito de $15.000.
+        </p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Cuando tu solicitud sea aprobada, escribe SOLICITAR:</label>
+        <input
+          type="text"
+          placeholder="Escribe SOLICITAR"
+          value={formData.solicitar}
+          onChange={(e) => setFormData({ ...formData, solicitar: e.target.value })}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+        />
+      </div>
+
+      <div className="flex gap-3">
+        <button
+          onClick={() => setStep('paso2')}
+          className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-3 rounded-lg transition-all"
+        >
+          Volver
+        </button>
+        <button
+          onClick={handleSolicitar}
+          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition-all"
+        >
+          Verificar
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderDatosFinales = () => (
+    <div className="space-y-6 animate-fadeIn">
+      <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 text-center">
+        <CheckCircle className="text-green-600 mx-auto mb-3" size={40} />
+        <h3 className="text-lg font-bold text-green-900 mb-2">¡Solicitud Aceptada!</h3>
+        <p className="text-green-700 text-sm">Ya puedes proceder a realizar el depósito.</p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <h4 className="font-bold text-gray-900 text-sm">Detalles de Pago</h4>
+        <div className="text-sm text-gray-600 space-y-2">
+          <p><strong>Abono requerido:</strong> ${cotizacion?.abono.toLocaleString('es-CL')}</p>
+          <p><strong>Saldo a pagar en el hostal:</strong> ${cotizacion?.saldo.toLocaleString('es-CL')}</p>
+          <p className="text-xs text-gray-500 mt-3">El saldo restante se cancela al llegar (Efectivo, Transferencia o Transbank)</p>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border-2 border-emerald-500 p-6 space-y-4">
+        <h4 className="font-bold text-gray-900 mb-3">Datos de Transferencia - HOSTAL HDQ</h4>
+
+        <div className="space-y-3 text-sm bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono">
+          <div><strong>Titular:</strong> David Quiero Barrientos</div>
+          <div><strong>RUT:</strong> 13.506.566-8</div>
+          <div><strong>Banco:</strong> Santander</div>
+          <div><strong>Tipo de Cuenta:</strong> Cuenta Corriente</div>
+          <div><strong>N° de Cuenta:</strong> 3919951</div>
+          <div><strong>Monto Abono:</strong> $15.000</div>
+          <div><strong>Correo:</strong> hostalhdq@gmail.com</div>
+        </div>
+
+        <button
+          onClick={copiarDatos}
+          className={`w-full py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${
+            datosCopiados
+              ? 'bg-green-500 text-white'
+              : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+          }`}
+        >
+          <Copy size={18} />
+          {datosCopiados ? '✓ Datos Copiados' : 'Copiar Datos de Transferencia'}
+        </button>
+      </div>
+
+      <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+        <p className="text-sm text-amber-900">
+          <strong>⏱️ Importante:</strong> Tienes 3 horas para realizar la transferencia. Luego de confirmar el pago, recibirás un correo de confirmación en {formData.email}.
+        </p>
+      </div>
+
+      <button
+        onClick={() => {
+          setStep('paso1');
+          setFormData({
+            checkIn: '',
+            checkOut: '',
+            tipoHabitacion: '',
+            nombre: '',
+            rut: '',
+            email: '',
+            solicitar: ''
+          });
+          setCotizacion(null);
+        }}
+        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition-all"
+      >
+        Nueva Solicitud de Reserva
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 py-8 px-4">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
+        
+        * { font-family: 'Poppins', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease-out;
+        }
+      `}</style>
+
+      <div className="max-w-lg mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-emerald-900 mb-2">🏨 Hostal HDQ</h1>
+          <p className="text-gray-600">Solicitud de Reserva - Concepción</p>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4">
+            <p className="text-white font-semibold text-sm">
+              {step === 'paso1' && '📅 Paso 1 de 3: Fechas y Tipo de Habitación'}
+              {step === 'paso2' && '👤 Paso 2 de 3: Tus Datos'}
+              {step === 'paso3' && '✅ Paso 3 de 3: Solicitud Pendiente'}
+              {step === 'datosFinales' && '💳 Datos de Transferencia'}
+            </p>
+          </div>
+
+          <div className="p-8">
+            {step === 'paso1' && renderPaso1()}
+            {step === 'paso2' && renderPaso2()}
+            {step === 'paso3' && renderPaso3()}
+            {step === 'datosFinales' && renderDatosFinales()}
+          </div>
+        </div>
+
+        <div className="text-center mt-8 text-gray-600 text-sm">
+          <p>¿Preguntas? Contacta a <strong>hostalhdq@gmail.com</strong></p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**Plantilla de Email para EmailJS:**
+```
+Asunto: Nueva Solicitud de Reserva - Hostal HDQ
+
+NUEVA SOLICITUD DE RESERVA
+
+Datos del Cliente:
+------------------
+Nombre: {{cliente_nombre}}
+RUT: {{cliente_rut}}
+Email: {{cliente_email}}
+
+Detalles de la Reserva:
+-----------------------
+Fecha de Entrada: {{fecha_entrada}}
+Fecha de Salida: {{fecha_salida}}
+Tipo de Habitación: {{tipo_habitacion}}
+Noches: {{noches}}
+
+Información de Pago:
+-------------------
+Total: {{total}}
+Abono requerido: {{abono}}
+Saldo a pagar en hostal: {{saldo}}
+
+---
+Este correo fue generado automáticamente desde el sistema de reservas de Hostal HDQ.
